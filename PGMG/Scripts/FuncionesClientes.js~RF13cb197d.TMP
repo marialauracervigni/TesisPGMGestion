@@ -1,0 +1,61 @@
+﻿﻿var EmpleadosItems = new Listas();
+
+
+function MostrarTelefonos(editar) {
+    $('#EmpleadosItems').html('');
+    if (EmpleadosItems.Total() > 0) {
+        var $table = $('<table class="table table-bordered table-striped table-responsive"/>');
+        if (editar)
+            $table.append('<thead><tr><th>Empleado</th><th>Puesto</th><th>Teléfono</th><th>Correo</th><th>Opción</th></tr></thead>');
+        else
+            $table.append('<thead><tr><th>Empleado</th><th>Puesto</th><th>Teléfono</th><th>Correo</th></tr></thead>');
+        var $tbody = $('<tbody/>');
+        for (var i = 0; i < EmpleadosItems.Total(); i++) {
+            var $row = $('<tr/>');
+            $row.append($('<td/>').html(EmpleadosItems.Item(i).Empleado));
+            $row.append($('<td/>').html(EmpleadosItems.Item(i).Puesto));
+            $row.append($('<td/>').html(EmpleadosItems.Item(i).TelEmpleado));
+            $row.append($('<td/>').html(EmpleadosItems.Item(i).mail));
+            if (editar)
+                $row.append($('<td/>')
+                    .html("<a href='#' class='btn btn-primary' data-toggle='tooltip' title='Eliminar' onClick='return EliminarEmpleado(" + i + ");'><span class='glyphicon glyphicon-trash' aria-hidden='true'></span>"));
+            $tbody.append($row);
+        }
+        $table.append($tbody);
+        $('#EmpleadosItems').html($table);
+    }
+}
+
+function addEmpleado_Click() {
+    var isValidItem = true;
+    //if ($('#Empleado').val().trim() == '') {
+    //    isValidItem = false;
+    //    $('#Empleado').siblings('span.error').css('visibility', 'visible');
+    //}
+    //else {
+    //    $('#Empleado').siblings('span.error').css('visibility', 'hidden');
+    //}
+
+    EmpleadosItems.Agregar({
+        EmpleadoId: 0,
+        NombreCompleto: $('#Empleado').val().trim(),
+        ClienteId: $('#Cliente').val().trim(),
+        Puesto: $('#Puesto').val().trim(),
+        Telefono: $('#TelEmpleado').val().trim(),
+        Correo: $('#mail').val().trim(),
+    });
+}
+        $('#Empleado').val('').focus(),
+        $('#Cliente').val(''),
+        $('#Puesto').val(''),
+        $('#TelEmpleado').val(''),
+        $('#mail').val(''),
+
+        MostrarEmpleados(true);
+}
+
+function EliminarEmpledo(indice) {
+    EmpleadosItems.Eliminar(indice);
+    MostrarEmpleados(true);
+    return false;
+}

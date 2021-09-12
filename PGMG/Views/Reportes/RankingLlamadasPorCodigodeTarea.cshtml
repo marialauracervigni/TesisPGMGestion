@@ -1,0 +1,26 @@
+﻿@model IEnumerable<PGMG.Models.LlamadaViewModel>
+
+      
+    <table id="tablallamadas" class="table table-striped">
+        <thead>
+            <tr>
+                <th style="text-align: center">Código de tarea</th>
+                <th style="text-align: center">Cant. de llamadas</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align: center">
+                        @Html.DisplayFor(modelItem => item.CodigoT)
+                    </td>
+                    <td style="text-align: center">
+                        @Html.DisplayFor(modelItem => item.Cantidad)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+  
+  

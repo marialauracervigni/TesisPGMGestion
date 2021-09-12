@@ -1,0 +1,70 @@
+﻿@model IEnumerable<PGMG.Models.LlamadaSolicitadaViewModel>
+
+@{
+    ViewBag.Title = "Llamada solicitada";
+}
+
+<div class="form-group">
+
+    <div class="centrar">
+        <hr />
+        <div>
+            <h4>@ViewBag.Title</h4>
+            <hr />
+            <input id="buscar" type="text" class="login" placeholder="Escriba algo para filtrar" />
+        </div>
+        <br /><br />
+        <table id="tabla" class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align: center" onclick="sortTable(0)">Fecha y hora</th>
+                    <th style="text-align: center" onclick="sortTable(1)">Nombre cliente</th>
+                    <th style="text-align: center" onclick="sortTable(2)">Nombre empleado</th>
+                    <th style="text-align: center" onclick="sortTable(3)">Usuario</th>
+                    <th style="text-align: center" onclick="sortTable(4)">Teléfono</th>
+                    <th style="text-align: center" onclick="sortTable(5)">Observaciones</th>
+                    <th style="text-align: center" onclick="sortTable(5)">Estado</th>
+                    <th style="text-align: center" onclick="sortTable(5)">Usuario telefonista</th>
+                    <th style="text-align: center" onclick="sortTable(5)">Respuesta</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Fecha.ToShortDateString()  @item.Hora.ToShortTimeString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreCliente)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreEmpleado)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Usuario)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Telefono)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Observaciones)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EstadoLlamada)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UsuarioTelef)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Respuesta)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+

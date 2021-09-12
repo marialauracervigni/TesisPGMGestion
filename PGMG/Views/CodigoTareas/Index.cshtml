@@ -1,0 +1,135 @@
+﻿
+@model IEnumerable<PGMG.Models.CodigoTarea>
+
+@{
+    ViewBag.Title = "Códigos de tareas";
+}
+
+
+<body class="w3">
+    <div class="centrar">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        <div class="row">
+            <div class="col-sm-8">
+                <a href="@Url.Action("Create")" class="btn btn-default"
+                   data-target="#modal-crear" data-toggle="modal">
+                    Nuevo código de tarea
+                </a>
+            </div>
+            <div class="col-sm-4">
+                <input id="buscar" type="text" class="login" placeholder="Escriba algo para filtrar" />
+            </div>
+        </div>
+        <hr />
+        <br />
+
+        <div class="table-responsive">
+            <table id="codigos" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: center" onclick="sortTable(0)">Código</th>
+                        <th style="text-align: center" onclick="sortTable(1)">Descripción</th>
+                        <th style="text-align: center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Codigo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Descripcion)
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", new {id = item.CodigoTareaId})" class="btn btn-default"
+                                    data-target="#modal-detalles" data-toggle="modal" title="Editar código de tarea">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </a>
+                                <a href="@Url.Action("Delete", new { id=item.CodigoTareaId })" class="btn btn-default"
+                                    data-target="#modal-eliminar" data-toggle="modal" title="Eliminar código de tarea">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<div class="modal fade" id="modal-eliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-detalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-crear" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        var textbuscar = document.getElementById("buscar");
+        textbuscar.onkeyup = function () {
+            buscar(this);
+        }
+        function buscar(inputbuscar) {
+            var valorabuscar = (inputbuscar.value).toLowerCase().trim();
+            var tabla_tr = document.getElementById("codigos").getElementsByTagName("tbody")[0].rows;
+            for (var i = 0; i < tabla_tr.length; i++) {
+                var tr = tabla_tr[i];
+                var textotr = (tr.innerText).toLowerCase();
+                tr.className = (textotr.indexOf(valorabuscar) >= 0) ? "mostrar" : "ocultar";
+            }
+        }
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("codigos");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
+}

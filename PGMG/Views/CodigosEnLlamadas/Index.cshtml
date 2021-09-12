@@ -1,0 +1,53 @@
+﻿@model IEnumerable<PGMG.Models.CodigosEnLlamada>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.codigoTarea.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Llamada.NombreCliente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Seleccionado)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.codigoTarea.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Llamada.NombreCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Seleccionado)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.CodigosEnLlamadaId }) |
+                @Html.ActionLink("Details", "Details", new { id=item.CodigosEnLlamadaId }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.CodigosEnLlamadaId })
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>

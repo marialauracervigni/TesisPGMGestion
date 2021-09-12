@@ -1,0 +1,86 @@
+﻿@model PGMG.Models.Viajes
+
+@{
+    ViewBag.Title = "Detalles";
+}
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+        </div>
+        <div class="modal-body">
+            @using (Ajax.BeginForm("Details", "Viajes", null,
+        new AjaxOptions
+        {
+            HttpMethod = "POST",
+            Url = Url.Action("Details", "Viajes"),
+            UpdateTargetId = "modal-content",
+            OnSuccess = "closeModalEdit",
+            InsertionMode = InsertionMode.Replace
+        },
+        new { @class = "form-horizontal", role = "form", id = "frmEditar" }
+        ))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="centrar">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.ViajesId)
+
+                    <div class="form-group">
+                        <b>@Html.DisplayNameFor(model => model.NombreCliente):</b>
+                        @Html.DisplayFor(model => model.NombreCliente)
+                    </div>
+                    <div class="form-group">
+                        <b>@Html.DisplayNameFor(model => model.FechaDesde):</b>
+                        @Model.FechaDesde.ToShortDateString()
+                    </div>
+                    <div class="form-group">
+                        <b>@Html.DisplayNameFor(model => model.FechaHasta):</b>
+                        @Model.FechaHasta.ToShortDateString()
+                    </div>
+                    <div class="form-group">
+                        <b>@Html.DisplayNameFor(model => model.Usuario):</b>
+                        @Html.DisplayFor(model => model.Usuario)
+                    </div>
+                    <div class="form-group">
+                        <b>@Html.DisplayNameFor(model => model.Observaciones):</b>
+                        @Html.DisplayFor(model => model.Observaciones)
+                    </div>
+                    <div class="form-group">
+                        <b>@Html.DisplayNameFor(model => model.Confirmado):</b>
+                        @Html.DisplayFor(model => model.Confirmado)
+                    </div>
+                    <div class="form-group">
+                        <b>@Html.DisplayNameFor(model => model.Realizado):</b>
+                        @Html.DisplayFor(model => model.Realizado)
+                    </div>
+                    <div class="form-group">
+                        <a href="@Url.Action("Edit", new { id = Model.ViajesId })" class="btn btn-default" target="_blank" title="Editar detalles del viaje">
+                            Editar
+                        </a>
+                    </div>
+                    
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function closeModal(data) {
+            if (data.success) {
+                $('#modal-detalles').modal('hide');
+                window.location.href = "/Viajes/viaje";
+            }
+        }
+    </script>
+}

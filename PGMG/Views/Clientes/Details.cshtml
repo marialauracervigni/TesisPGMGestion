@@ -1,0 +1,78 @@
+﻿@model PGMG.Models.Cliente
+
+@{
+    ViewBag.Title = "Detalles";
+}
+
+<body class="w3">
+    <div class="centrar" id="cliente">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        <div class="form-group" style="text-align:justify">
+            <b>@Html.DisplayNameFor(model => model.Nombre):</b>
+            @Html.DisplayFor(model => model.Nombre)
+        </div>
+        <div class="form-group" style="text-align:justify">
+            <b>@Html.DisplayNameFor(model => model.Localidad):</b>
+            @Html.DisplayFor(model => model.Localidad)
+        </div>
+        <div class="form-group" style="text-align:justify">
+            <b>@Html.DisplayNameFor(model => model.Provincia):</b>
+            @Html.DisplayFor(model => model.Provincia.NombreP)
+        </div>
+        <div class="form-group" style="text-align:justify">
+            <b>@Html.DisplayNameFor(model => model.Telefono):</b>
+            @Html.DisplayFor(model => model.Telefono)
+        </div>
+        <div class="form-group" style="text-align:justify">
+            <b>@Html.DisplayNameFor(model => model.Domicilio):</b>
+            @Html.DisplayFor(model => model.Domicilio)
+        </div>
+        <div class="form-group" style="text-align:justify">
+            <b>@Html.DisplayNameFor(model => model.Correo):</b>
+            @Html.DisplayFor(model => model.Correo)
+        </div>
+        <div class="form-group" style="text-align:justify">
+            <b>@Html.DisplayNameFor(model => model.FechaAlta):</b>
+            @Model.FechaAlta.ToShortDateString()
+        </div>
+        <div class="form-group" style="text-align:justify">
+            <b>@Html.DisplayNameFor(model => model.FechaFundacion):</b>
+            @Model.FechaFundacion.ToShortDateString()
+        </div>
+        <br />
+        <br />
+        <div class="form-group desaparecerTemporalmente" style="text-align:justify">
+            <a href="@Url.Action("Index")" class="btn btn-default"
+               data-toggle="tooltip" title="Regresar">
+                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-default" onclick="exportTableToPDF()" title="Exportar a PDF">
+                <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
+</body>
+
+@section Scripts{
+    <script>
+        function exportTableToPDF() {
+            //Seleccionamos TODOS los elementos que tienen esta clase "desaparecerTemporalmente y le damos un display none"
+            $(".desaparecerTemporalmente").css("display", "none");
+            html2canvas(document.getElementById('cliente'), {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("cliente.pdf");
+                }
+            });
+            //Ahora que ya fue exportado, regresamos los botones a su sitio:
+            $(".desaparecerTemporalmente").css("display", "");
+    }
+    </script>
+}

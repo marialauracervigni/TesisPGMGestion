@@ -1,0 +1,217 @@
+﻿@using App.Extensions
+@using PagedList.Mvc;
+@model PagedList.PagedList<PGMG.Models.LlamadaSolicitadaViewModel>
+
+
+@{
+    ViewBag.Title = "Llamadas solicitadas";
+    var NomUsuario = User.Identity.GetNombreCompleto();
+}
+
+<body class="w3">
+    <div class="centrar">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        <div class="row">
+            <div class="col-sm-8">
+                @if (User.IsInRole("Administradora") || User.IsInRole("Telefonista"))
+                {
+                    <p>
+                        <a class="btn btn-default" href="/LlamadasSolicitadas/Index2" target="_blank">Ver llamadas del día</a>
+                    </p>
+                }
+                </div>
+            <div class="col-sm-4">
+                <input id="buscar" type="text" class="login" placeholder="Escriba algo para filtrar" />
+            </div>
+        </div>
+        <br />
+
+        <table id="llamadasolicitadas" class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align: center" onclick="sortTable(0)">Fecha y hora</th>
+                    <th style="text-align: center" onclick="sortTable(1)">Nombre cliente</th>
+                    <th style="text-align: center" onclick="sortTable(2)">Nombre empleado</th>
+                    <th style="text-align: center" onclick="sortTable(3)">Observaciones</th>
+                    <th style="text-align: center" onclick="sortTable(4)">Teléfono</th>
+                    <th style="text-align: center" onclick="sortTable(5)">Usuario</th>
+                    <th style="text-align: center" onclick="sortTable(6)">Estado llamada</th>
+                    <th style="text-align: center" onclick="sortTable(7)">Telefonista</th>
+                    <th style="text-align: center">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Fecha.ToShortDateString() @item.Hora.ToShortTimeString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreCliente)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreEmpleado)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Observaciones)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Telefono)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Usuario)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EstadoLlamada)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UsuarioTelef)
+                        </td>
+
+                        <td class="desaparecerTemporalmente">
+                            @if (item.EstadoLlamada == "Pendiente")
+                            {
+                                if (NomUsuario == item.Usuario)
+                                {
+                                    <a href="@Url.Action("Edit4", "LlamadasSolicitadas", new { id = item.LlamadaSolicitadaId })" class="btn btn-default"
+                                       data-target="#modal-eliminar" data-toggle="modal" title="Cancelar llamada">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a class="btn btn-default" onclick="exportTableToExcel('tblData')" title="Exportar a Excel">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+        </a>
+        <a class="btn btn-default" onclick="exportTableToPDF()" title="Exportar a PDF">
+            <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+        </a>
+        <br />
+        <br />
+        Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+        <br />
+        Total pendientes @Model.TotalItemCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", "LlamadasSolicitadas",
+       new { page, pageSize = ViewBag.PageSize}))
+    </div>
+</body>
+<div class="modal fade" id="modal-eliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        //$(document).ready(function () {
+        //    $('#actualizar').on('click', function () {
+        //        window.location.reload($('#recargar'));
+        //    });
+        //});
+
+        //function actualizar() { location.reload(true); }
+        ////Función para actualizar cada 3 segundos(3000 milisegundos)
+        //setInterval("actualizar()", 3000);
+
+        var textbuscar = document.getElementById("buscar");
+        textbuscar.onkeyup = function () {
+            buscar(this);
+        }
+        function buscar(inputbuscar) {
+            var valorabuscar = (inputbuscar.value).toLowerCase().trim();
+            var tabla_tr = document.getElementById("llamadasolicitadas").getElementsByTagName("tbody")[0].rows;
+            for (var i = 0; i < tabla_tr.length; i++) {
+                var tr = tabla_tr[i];
+                var textotr = (tr.innerText).toLowerCase();
+                tr.className = (textotr.indexOf(valorabuscar) >= 0) ? "mostrar" : "ocultar";
+            }
+        }
+
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("llamadasolicitadas");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function exportTableToExcel(tableID, filename = '') {
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect = document.getElementById("llamadasolicitadas");
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+            filename = filename ? filename + '.xls' : 'LlamadasSolicitadas.xls';
+            downloadLink = document.createElement("a");
+            document.body.appendChild(downloadLink);
+
+            if (navigator.msSaveOrOpenBlob) {
+                var blob = new Blob(['ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob(blob, filename);
+            } else {
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+                downloadLink.download = filename;
+                downloadLink.click();
+            }
+        }
+
+        function exportTableToPDF() {
+            //Seleccionamos TODOS los elementos que tienen esta clase "desaparecerTemporalmente y le damos un display none"
+            $(".desaparecerTemporalmente").css("display", "none");
+            html2canvas(document.getElementById('llamadasolicitadas'), {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("LlamadasSolicitadas.pdf");
+                }
+            });
+            //Ahora que ya fue exportado, regresamos los botones a su sitio:
+            $(".desaparecerTemporalmente").css("display", "");
+        }
+    </script>
+}

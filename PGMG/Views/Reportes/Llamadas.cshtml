@@ -1,0 +1,205 @@
+﻿@model PGMG.Models.ReporteLlamadasViewModel
+
+@{
+    ViewBag.Title = "Llamadas";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<div class="form-horizontal centrar">
+    @Html.LabelFor(model => model.Desde, htmlAttributes: new { @class = "control-label" })
+    @Html.TextBoxFor(model => model.Desde, "{0:dd/MM/yyyy}",
+     new { @class = "login datepicker" })
+    @Html.ValidationMessageFor(model => model.Desde, "", new { @class = "text-danger" })
+
+    @Html.LabelFor(model => model.Hasta, htmlAttributes: new { @class = "control-label" })
+    @Html.TextBoxFor(model => model.Hasta, "{0:dd/MM/yyyy}",
+     new { @class = "login datepicker" })
+    @Html.ValidationMessageFor(model => model.Hasta, "", new { @class = "text-danger" })
+
+    <input type="submit" value="Generar" id="submit" class="btn btn-default" />
+</div>
+<br />
+}
+
+<div class="row wow fadeIn">
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header text-center">
+                Llamadas por día
+            </div>
+            <div class="card-body">
+                <canvas id="LlamadasPorFecha"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 md-4">
+        <div class="card">
+            <br />
+            <div class="text-center">
+                Top 10 llamadas por cliente
+            </div>
+            <div class="card-body">
+                @Html.Action("RankingLlamadas")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row wow fadeIn">
+    <div class="col-lg-6 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Llamadas por forma de comunicación</div>
+            <div class="card-body">
+                <canvas id="llamadasporformadecomun"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Llamadas recibidas por mes</div>
+            <div class="card-body">
+                <canvas id="LlamadasRecibidasPorMes"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row wow fadeIn">
+    <div class="col-lg-6 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Top 10 llamadas por usuario</div>
+            <div class="card-body">
+                @Html.Action("RankingLlamadasPorUsuario")
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Códigos de tareas utilizados en las llamadas</div>
+            <div class="card-body">
+                @Html.Action("RankingLlamadasPorCodigodeTarea")
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script type="text/javascript" src="~/Scripts/wow.js"></script>
+    <script type="text/javascript" src="~/Scripts/wow.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/chart.js"></script>
+
+    <script>
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: 'es'
+        });
+
+        //LLamadas por forma de comunicacion//
+        var llfc = @Html.Raw(Json.Encode(ViewBag.LLFC));
+        var forma = @Html.Raw(Json.Encode(ViewBag.forma));
+
+
+        var ctx = document.getElementById("llamadasporformadecomun").getContext("2d");
+
+        var charttt = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+            labels: forma,
+            datasets: [{
+            data: llfc,
+            backgroundColor: ["#3cb371", "#6a5acd", "#6ca8ff", "#4D5360"],
+            hoverBackgroundColor: ["#84dd8e", "#8e93ff", "#a3cfff", "#616774"]
+            }]
+            },
+        });
+
+        // LLAMADAS POR FECHA
+        var Cantidades = @Html.Raw(Json.Encode(ViewBag.LLPF));
+        var Dias = @Html.Raw(Json.Encode(ViewBag.LLPF2));
+
+        var ctx = document.getElementById("LlamadasPorFecha").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Dias,
+                datasets: [{
+                    label: 'Cantidad de llamadas',
+                    data: Cantidades,
+                    backgroundColor:'rgba(132, 221, 142, 0.2)',
+                    borderColor:'rgba(60, 179, 113, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            max: 100,
+                            stepSize: 20,
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        //LLAMADAS POR MES//
+        var Cantidad = @Html.Raw(Json.Encode(ViewBag.LLPM));
+        var Dias = @Html.Raw(Json.Encode(ViewBag.LLPM2));
+
+
+        new Chart(document.getElementById("LlamadasRecibidasPorMes"), {
+            "type": "horizontalBar",
+            "data": {
+                "labels": Dias,
+                "datasets": [{
+                    "label": "Cantidad de llamadas",
+                    "data": Cantidad,
+                    "fill": false,
+                    "backgroundColor": "#3cb371",
+                    "borderColor": "#3cb371",
+                    "hoverBackgroundColor": "#84dd8e",
+                    "borderWidth": 1
+                }]
+            },
+            "options": {
+                "scales": {
+                    "xAxes": [{
+                        "ticks": {
+                            "beginAtZero": true,
+                            "stepSize": 40
+
+                        }
+                    }]
+                }
+            }
+        });
+
+        //LLamadas por código de tarea//
+        var llct = @Html.Raw(Json.Encode(ViewBag.llct));
+        var llct2 = @Html.Raw(Json.Encode(ViewBag.llct2));
+
+
+        var ctx = document.getElementById("llamadasporcodigodetarea").getContext("2d");
+
+        var charttt = new Chart(ctx, {
+            type: 'pie',
+            data: {
+            labels: llct2,
+            datasets: [{
+            data: llct,
+            backgroundColor: ["#3cb371", "#6a5acd", "#6ca8ff", "#4D5360"],
+            hoverBackgroundColor: ["#84dd8e", "#8e93ff", "#a3cfff", "#616774"]
+            }]
+            },
+        });
+
+    </script>
+}

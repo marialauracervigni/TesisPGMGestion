@@ -1,0 +1,129 @@
+﻿@using PagedList.Mvc;
+@model PagedList.PagedList<PGMG.Models.ViajesViewModel>
+
+@{
+    ViewBag.Title = "Viajes por cliente";
+}
+
+<div class="form-group">
+        <div class="centrar">
+            <hr />
+            <div>
+                <h4>@ViewBag.Title </h4>
+                <hr />
+                <input id="buscar" type="text" class="login" placeholder="Escriba algo para filtrar" />
+            </div>
+
+            <br /><br />
+            <table id="tabla" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: center" onclick="sortTable(0)">Desde</th>
+                        <th style="text-align: center" onclick="sortTable(1)">Hasta</th>
+                        <th style="text-align: center" onclick="sortTable(2)">Usuario</th>
+                        <th style="text-align: center" onclick="sortTable(3)">Observaciones</th>
+                        <th style="text-align: center" onclick="sortTable(4)">Confirmado</th>
+                        <th style="text-align: center" onclick="sortTable(5)">Realizado</th>
+                        <th style="text-align: center">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        
+                        <tr>
+                            <td>
+                                @item.Start.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.End.ToShortDateString()
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Usuario)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Observaciones)
+                            </td>
+                            <td>
+                                @Html.HiddenFor(modelItem => item.Confirmado)  
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Realizado)
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", new { id = item.ViajesViewModelId })" class="btn btn-default"
+                                   data-toggle="tooltip" title="Modificar viaje">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+            Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+            <br />
+            Total llamadas del cliente @Model.TotalItemCount
+
+            @Html.PagedListPager(Model, page => Url.Action("ReporteViajes", "Viajes",
+           new { page, pageSize = ViewBag.PageSize}))
+        </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        var textbuscar = document.getElementById("buscar");
+        textbuscar.onkeyup = function () {
+            buscar(this);
+        }
+        function buscar(inputbuscar) {
+            var valorabuscar = (inputbuscar.value).toLowerCase().trim();
+            var tabla_tr = document.getElementById("tabla").getElementsByTagName("tbody")[0].rows;
+            for (var i = 0; i < tabla_tr.length; i++) {
+                var tr = tabla_tr[i];
+                var textotr = (tr.innerText).toLowerCase();
+                tr.className = (textotr.indexOf(valorabuscar) >= 0) ? "mostrar" : "ocultar";
+            }
+        }
+
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("tabla");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+    </script>
+}
+

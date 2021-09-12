@@ -1,0 +1,75 @@
+﻿@model PGMG.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Crear nuevo usuario";
+}
+    <div class="centrar">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        @using (Html.BeginForm("Create", "UsersAdmin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary("", new { @class = "text-error" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.NombreCompleto, new { @class = "control-label" })
+                <br />
+                @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "login" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                <br />
+                @Html.TextBoxFor(m => m.UserName, new { @class = "login" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                <br />
+                @Html.TextBoxFor(m => m.Email, new { @class = "login" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                <br />
+                @Html.PasswordFor(m => m.Password, new { @class = "login" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label" })
+                <br />
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "login" })
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">
+                    Seleccione el rol del usuario
+                </label>
+                <br />
+                @foreach (var item in (SelectList)ViewBag.RoleId)
+                {
+                    <input type="checkbox" name="SelectedRoles" value="@item.Value" class="checkbox-inline" />
+                    @Html.Label(item.Value, new { @class = "control-label" })
+                }
+            </div>
+
+            <div class="form-group">
+                <a href="@Url.Action("Index")" class="btn btn-default"
+                   data-toggle="tooltip" title="Regresar">
+                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+                </a>
+                <input type="submit" class="btn btn-default" value="Crear" />
+            </div>
+        }
+    </div>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: 'es'
+        });
+    </script>
+}
+

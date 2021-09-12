@@ -1,0 +1,61 @@
+﻿@model PGMG.Models.Llamada
+
+@{
+    ViewBag.Title = "Detalles";
+}
+
+<body class="w3">
+    <div class="centrar">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.Fecha):</b>
+            @Model.Fecha.ToShortDateString()
+        </div>
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.Hora):</b>
+            @Model.Hora.ToShortTimeString()
+        </div>
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.NombreCliente):</b>
+            @Html.DisplayFor(model => model.NombreCliente)
+        </div>
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.NombreEmpleado):</b>
+            @Html.DisplayFor(model => model.NombreEmpleado)
+        </div>
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.Tema):</b>
+            @Html.DisplayFor(model => model.Tema)
+        </div>
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.Descripcion):</b>
+            @Html.DisplayFor(model => model.Descripcion)
+        </div>
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.TiempoEnLlamado):</b>
+            @Html.DisplayFor(model => model.TiempoEnLlamado)
+        </div>
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.Usuario):</b>
+            @Html.DisplayFor(model => model.Usuario)
+        </div>
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.Estado):</b>
+            @Html.DisplayFor(model => model.Estado.Descripcion)
+        </div>
+        <div class="form-group">
+            <b>@Html.DisplayNameFor(model => model.Etiqueta):</b>
+            @Html.DisplayFor(model => model.Etiqueta.Descripcion)
+        </div>
+
+    </br>
+    </br>
+    </br>
+
+    <a href="@Url.Action("Index2")" class="btn btn-default"
+       data-toggle="tooltip" title="Regresar">
+        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+    </a>
+    </div>
+</body>

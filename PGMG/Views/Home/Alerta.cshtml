@@ -1,0 +1,24 @@
+﻿@model IEnumerable<PGMG.Models.LlamadaSolicitadaViewModel>
+@using Microsoft.AspNet.Identity
+@using App.Extensions
+
+@{
+    ViewBag.Title = "Notificaciones";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    var NomUsuario = User.Identity.GetNombreCompleto();
+
+    var IdUsuario = User.Identity.GetUserId();
+
+
+    <body class="w3">
+        <div class="centrar">
+            <h4>@ViewBag.Title</h4>
+            <br />
+                <strong>@NomUsuario,</strong> no tiene notificaciones.
+        </div>
+    </body>
+
+}

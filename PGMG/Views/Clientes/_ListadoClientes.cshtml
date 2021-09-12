@@ -1,0 +1,138 @@
+﻿@using PagedList.Mvc;
+@model PagedList.PagedList<PGMG.Models.ClientesBusqueda>
+
+
+@{
+    ViewBag.Title = "Listado clientes";
+}
+<div class="form-group">
+    <body class="w3">
+        <div class="centrar">
+            <h4>@ViewBag.Title</h4>
+            <input id="buscar" type="text" class="login" placeholder="Escriba algo para filtrar" />
+            <hr />
+            <table id="clientes" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: center" onclick="sortTable(0)">Nombre</th>
+                        <th style="text-align: center" onclick="sortTable(1)">Localidad</th>
+                        <th style="text-align: center" onclick="sortTable(2)">Teléfono</th>
+                        <th style="text-align: center" onclick="sortTable(3)">Domicilio</th>
+                        <th style="text-align: center" onclick="sortTable(4)">Correo</th>
+                        <th style="text-align: center" onclick="sortTable(5)">Fecha alta</th>
+                        <th style="text-align: center" onclick="sortTable(6)">Fecha fundacion</th>
+                        <th style="text-align: center" onclick="sortTable(7)">Provincia</th>
+                        <th style="text-align: center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Localidad)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Telefono)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Domicilio)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Correo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaAlta)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaFundacion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Provincia)
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", new { id=item.ClienteId })" class="btn btn-default"
+                                   data-toggle="tooltip" title="Modificar cliente">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                </a>
+                                <a href="@Url.Action("Details", new { id=item.ClienteId })" class="btn btn-default"
+                                   data-toggle="tooltip" title="Ver detalle del cliente">
+                                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                </a>
+                                <a href="@Url.Action("Delete", new { id=item.ClienteId })" class="btn btn-default"
+                                   data-toggle="tooltip" title="Eliminar cliente">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+            Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+            <br />
+            Total pendientes @Model.TotalItemCount
+
+            @Html.PagedListPager(Model, page => Url.Action("_ListadoClientes", "Clientes",
+           new { page, pageSize = ViewBag.PageSize}))
+    </body>
+</div>
+
+@section Scripts {
+    <script>
+        var textbuscar = document.getElementById("buscar");
+        textbuscar.onkeyup = function () {
+            buscar(this);
+        }
+        function buscar(inputbuscar) {
+            var valorabuscar = (inputbuscar.value).toLowerCase().trim();
+            var tabla_tr = document.getElementById("clientes").getElementsByTagName("tbody")[0].rows;
+            for (var i = 0; i < tabla_tr.length; i++) {
+                var tr = tabla_tr[i];
+                var textotr = (tr.innerText).toLowerCase();
+                tr.className = (textotr.indexOf(valorabuscar) >= 0) ? "mostrar" : "ocultar";
+            }
+        }
+
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("clientes");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+        
+    </script>
+}

@@ -1,0 +1,108 @@
+﻿@model IEnumerable<PGMG.Models.FormaDeComunicacion>
+
+@{
+    ViewBag.Title = "Formas de comunicación";
+}
+
+<body class="w3">
+    <div class="centrar">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        <a href="@Url.Action("Create")" class="btn btn-default"
+           data-target="#modal-crear" data-toggle="modal">
+            Nueva forma de comunicación
+        </a>
+        <br /><br />
+
+        <div class="table-responsive">
+            <table id="comunicaciones" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: center" onclick="sortTable(0)">Descripción</th>
+                        <th style="text-align: center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Detalle)
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", new {id = item.FormaDeComunicacionId})" class="btn btn-default"
+                                   data-target="#modal-detalles" data-toggle="modal" title="Editar forma de comunicación">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </a>
+                                <a href="@Url.Action("Delete", new { id=item.FormaDeComunicacionId })" class="btn btn-default"
+                                   data-target="#modal-eliminar" data-toggle="modal" title="Eliminar forma de comunicación">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<div class="modal fade" id="modal-eliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-detalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-crear" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("comunicaciones");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
+}

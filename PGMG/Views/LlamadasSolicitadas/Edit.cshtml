@@ -1,0 +1,130 @@
+﻿@model PGMG.Models.LlamadaSolicitada
+@using Microsoft.AspNet.Identity
+@using App.Extensions
+
+@{
+    ViewBag.Title = "Gestionar llamada";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+
+    <body class="w3">
+        <div class="centrar">
+            <h4>@ViewBag.Title</h4>
+            <hr />
+            @Html.ValidationSummary(true, "Falta ingresar algún dato", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.LlamadaSolicitadaId)
+
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.HiddenFor(model => model.ClienteId)
+                    @Html.LabelFor(model => model.NombreCliente, htmlAttributes: new { @class = "control-label" })
+                    <br />
+                    <input type="text" id="nombre" @Html.EditorFor(model => model.NombreCliente, new { htmlAttributes = new { @class = "login" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.NombreCliente, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NombreEmpleado, htmlAttributes: new { @class = "control-label" })
+                    <br />
+                    @Html.EditorFor(model => model.NombreEmpleado, new { htmlAttributes = new { @class = "login" } })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.NombreEmpleado, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "control-label" })
+                    <br />
+                    @Html.TextBoxFor(model => model.Fecha, "{0:dd/MM/yyyy}",
+                    new { @class = "login datepicker", @Value = @DateTime.Now.ToShortDateString() })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Hora, htmlAttributes: new { @class = "control-label" })
+                    <br />
+                    @Html.TextBoxFor(model => model.Hora, new { @class = "login", @Value = DateTime.Now.ToString("HH:mm") })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.Hora, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label" })
+                    <br />
+                    @Html.DropDownListFor(model => model.Usuario, ViewData["usuarioactual"] as SelectList,
+                        new { @class = "login" })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label" })
+                    <br />
+                    @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "login" } })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Observaciones, htmlAttributes: new { @class = "control-label" })
+                    <br />
+                    @Html.EditorFor(model => model.Observaciones, new { htmlAttributes = new { @class = "login" } })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EstadoLlamada, htmlAttributes: new { @class = "control-label" })
+                    <br />
+                    @Html.DropDownListFor(model => model.EstadoLlamadaId, ViewData["estado"] as SelectList,
+                    new { @class = "login"  })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.UsuarioTelef, htmlAttributes: new { @class = "control-label" })
+                    <br />
+                    @Html.DropDownListFor(model => model.UsuarioTelef, ViewData["usuariotel"] as SelectList,
+                    new { @class = "login"  })
+                    <br />
+                    @Html.ValidationMessageFor(model => model.UsuarioTelef, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.HiddenFor(model => model.Respuesta)
+
+
+
+                <div class="form-group">
+                    <a href="@Url.Action("Index")" class="btn btn-default"
+                       data-toggle="tooltip" title="Regresar">
+                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+                    </a>
+                    <input type="submit" value="Aceptar" id="submit" class="btn btn-default" data-toggle="tooltip" />
+                </div>
+            </div>
+        </div>
+    </body>
+
+}
+
+@section Scripts{
+    <script src="~/Scripts/ValidarAlCerrar.js"></script>
+    <script>
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: 'es'
+            });
+
+        $('#nombre')
+            .autocomplete({
+            source: '@Url.Action("Lista","Clientes")',minLength:3,
+            select: function (event, ui) {
+            $('#ClienteId').val(ui.item.id);
+            $('#nombre').val(ui.item.value);
+            return false;
+            }
+            });
+    </script>
+}

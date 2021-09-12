@@ -1,0 +1,192 @@
+﻿@using PagedList.Mvc;
+@model PagedList.PagedList<PGMG.Models.ClientesBusqueda>
+
+@{
+    ViewBag.Title = "Lista de clientes";
+}
+
+<body class="w3">
+    <div class="centrar">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        <div class="row">
+            <div class="col-sm-8">
+            </div>
+            <div class="col-sm-4">
+                <input id="buscar" type="text" class="login" placeholder="Escriba algo para filtrar" />
+            </div>
+        </div>
+        <br />
+
+        <div class="rwd" id="recargar">
+            <table id="clientes" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: center" onclick="sortTable(0)">Nombre</th>
+                        <th style="text-align: center" onclick="sortTable(1)">Localidad</th>
+                        <th style="text-align: center" onclick="sortTable(2)">Provincia</th>
+                        <th style="text-align: center" onclick="sortTable(3)">Teléfono</th>
+                        <th style="text-align: center" onclick="sortTable(4)">Fecha alta</th>
+                        <th style="text-align: center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Localidad)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Provincia)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Telefono)
+                            </td>
+                            <td>
+                                @item.FechaAlta.ToShortDateString()
+                            </td>
+                            <td class="desaparecerTemporalmente">
+                                <a href="@Url.Action("ReporteLlamadas","Llamadas", new { id=item.ClienteId })" class="btn btn-default" target="_blank"
+                                   data-toggle="tooltip" title="Ver llamadas del cliente">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <a class="btn btn-default" onclick="exportTableToExcel('tblData')" title="Exportar a Excel">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-default" onclick="exportTableToPDF()" title="Exportar a PDF">
+                <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span>
+            </a>
+            <br />
+            <br />
+            Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+            <br />
+            Total clientes @Model.TotalItemCount
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", "Clientes",
+            new { page, pageSize = ViewBag.PageSize}))
+        </div>
+    </div>
+</body>
+
+
+<div class="modal fade" id="modal-eliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var textbuscar = document.getElementById("buscar");
+        textbuscar.onkeyup = function () {
+            buscar(this);
+        }
+        function buscar(inputbuscar) {
+            var valorabuscar = (inputbuscar.value).toLowerCase().trim();
+            var tabla_tr = document.getElementById("clientes").getElementsByTagName("tbody")[0].rows;
+            for (var i = 0; i < tabla_tr.length; i++) {
+                var tr = tabla_tr[i];
+                var textotr = (tr.innerText).toLowerCase();
+                tr.className = (textotr.indexOf(valorabuscar) >= 0) ? "mostrar" : "ocultar";
+            }
+        }
+
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("clientes");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function exportTableToExcel(tableID, filename = '') {
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect = document.getElementById("clientes");
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+            // Specify file name
+            filename = filename ? filename + '.xls' : 'ListadoClientes.xls';
+
+            // Create download link element
+            downloadLink = document.createElement("a");
+
+            document.body.appendChild(downloadLink);
+
+            if (navigator.msSaveOrOpenBlob) {
+                var blob = new Blob(['ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob(blob, filename);
+            } else {
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+                // Setting the file name
+                downloadLink.download = filename;
+
+                //triggering the function
+                downloadLink.click();
+            }
+        }
+
+        function exportTableToPDF() {
+            //Seleccionamos TODOS los elementos que tienen esta clase "desaparecerTemporalmente y le damos un display none"
+            $(".desaparecerTemporalmente").css("display", "none");
+            html2canvas(document.getElementById('clientes'), {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("Clientes.pdf");
+                }
+            });
+            //Ahora que ya fue exportado, regresamos los botones a su sitio:
+            $(".desaparecerTemporalmente").css("display", "");
+        }
+    </script>
+
+}

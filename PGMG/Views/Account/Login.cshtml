@@ -1,0 +1,83 @@
+﻿@using PGMG.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Iniciar sesión";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Proyecto de Tesis">
+    <meta name="author" content="Maria Laura Cervigni">
+    @*<title>Simple Sidebar - Start Bootstrap Template</title>*@
+    <!-- Bootstrap core CSS -->
+    <link href="~/Content/Inicio2.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="~/Content/Inicio.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" href="@Url.Content("~/Content/Imagenes/favicon.ico")" />
+    <title>@ViewBag.Title | PGMG</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+
+<body>
+    <div class="centrar">
+        <br />
+        <hr />
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        <br />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <img src="~/Content/Imagenes/Logocompleto.png" />
+        <br /><br />
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                    <br />
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "login" })
+                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                    <br />
+                    @Html.PasswordFor(m => m.Password, new { @class = "login" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Acceder" class="btn btn-default" />
+                    <br /><br />
+                    <p>
+                        @Html.ActionLink("¿Ha olvidado su contraseña?", "ForgotPassword")
+                    </p>
+                </div>
+            }
+        </section>
+    </div>
+
+</body>
+
+</html>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

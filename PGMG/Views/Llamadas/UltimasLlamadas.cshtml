@@ -1,0 +1,52 @@
+﻿@model IEnumerable<PGMG.Models.LlamadaViewModel>
+
+
+<div class="centrar">
+    <table id="tablallamadas" class="table table-striped">
+        <thead>
+            <tr>
+                <th style="text-align: center">Fecha</th>
+                <th style="text-align: center">Hora</th>
+                <th style="text-align: center">Usuario</th>
+                <th style="text-align: center">Nombre empleado</th>
+                <th style="text-align: center">Tema</th>
+                <th style="text-align: center">Descripcion</th>
+                <th style="text-align: center">Acción</th>
+                <th hidden></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Fecha.ToShortDateString()
+                    </td>
+                    <td>
+                        @item.Hora.ToShortTimeString()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Usuario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tema)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Details", new { id = item.LlamadaId })" target="_blank" class="btn btn-default"
+                           data-toggle="tooltip" title="Ver mas información de la llamada">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                        </a>
+                    </td>
+
+                </tr>
+                
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,26 @@
+﻿@model PGMG.Models.IndexViewModel
+@{
+    ViewBag.Title = "Gestionar contraseña";
+}
+<div class="centrar">
+    <h4>@ViewBag.Title</h4>
+
+    <p class="text-success">@ViewBag.StatusMessage</p>
+    <div>
+        <hr />
+        <dl >
+            <dt>Contraseña:</dt>
+            <dd>
+
+                @if (Model.HasPassword)
+                {
+                    @Html.ActionLink("Cambiar la contraseña", "ChangePassword")
+                }
+                else
+                {
+                    @Html.ActionLink("Crear", "SetPassword")
+                }
+            </dd>
+        </dl>
+    </div>
+</div>

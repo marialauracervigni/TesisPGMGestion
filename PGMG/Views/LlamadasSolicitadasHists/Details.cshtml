@@ -1,0 +1,106 @@
+﻿@model PGMG.Models.LlamadasSolicitadasHist
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>LlamadasSolicitadasHist</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ClienteLlamadaSolic.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClienteLlamadaSolic.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstadLlamada.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstadLlamada.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LlamadaSolicitadaId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LlamadaSolicitadaId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NombreCliente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreCliente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Hora)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Hora)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NombreEmpleado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreEmpleado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstadoLlamada)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstadoLlamada)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Observaciones)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Observaciones)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.LlamadasSolicitadasHistId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,176 @@
+﻿@model PGMG.Models.ReporteLlamadasViewModel
+
+@{
+    ViewBag.Title = "Llamadas solicitadas";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-horizontal centrar">
+        @Html.LabelFor(model => model.Desde, htmlAttributes: new { @class = "control-label" })
+        @Html.TextBoxFor(model => model.Desde, "{0:dd/MM/yyyy}",
+         new { @class = "login datepicker" })
+        @Html.ValidationMessageFor(model => model.Desde, "", new { @class = "text-danger" })
+
+        @Html.LabelFor(model => model.Hasta, htmlAttributes: new { @class = "control-label" })
+        @Html.TextBoxFor(model => model.Hasta, "{0:dd/MM/yyyy}",
+         new { @class = "login datepicker" })
+        @Html.ValidationMessageFor(model => model.Hasta, "", new { @class = "text-danger" })
+
+        <input type="submit" value="Generar" id="submit" class="btn btn-default" />
+    </div>
+    <br />
+}
+    <div class="row wow fadeIn">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header text-center">
+                    Llamadas solicitadas por fecha
+                </div>
+                <div class="card-body">
+                    <canvas id="LlamadasPorFecha"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 md-4">
+            <div class="card">
+                <br />
+                <div class="text-center">
+                    Top 10 llamadas solicitadas por usuario
+                </div>
+                <div class="card-body">
+                    @Html.Action("RankingLlamadasSolicitadas")
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 md-4">
+            <div class="card">
+                <br />
+                <div class="text-center">
+                    Top 10 llamadas solicitadas por cliente
+                </div>
+                <div class="card-body">
+                    @Html.Action("RankingLlamadasSolicitadasPorCliente")
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="row wow fadeIn">
+    <div class="col-lg-6 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Respuestas de llamadas solicitadas</div>
+            <div class="card-body">
+                <canvas id="respuestasdellamadassolicitadas"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Llamadas solicitas por mes</div>
+            <div class="card-body">
+                <canvas id="LlamadasSolicitadasPorMes"></canvas>
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+
+    @section scripts {
+
+        <script type="text/javascript" src="~/Scripts/wow.js"></script>
+        <script type="text/javascript" src="~/Scripts/wow.min.js"></script>
+        <script type="text/javascript" src="~/Scripts/chart.js"></script>
+        <script>
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: 'es',
+           
+        });
+
+
+        //RESPUESTAS DE LLAMADAS SOLICITADAS//
+        var Cantidad1 = @Html.Raw(Json.Encode(ViewBag.RLS));
+        var etiquetas = @Html.Raw(Json.Encode(ViewBag.forma1));
+
+        var ctx = document.getElementById("respuestasdellamadassolicitadas").getContext("2d");
+
+        var charttt = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: etiquetas,
+            datasets: [{
+            data: Cantidad1,
+            backgroundColor: ["#3cb371", "#6a5acd", "#6ca8ff"],
+            hoverBackgroundColor: ["#84dd8e", "#8e93ff", "#a3cfff"]
+            }]
+            },
+        });
+
+        // LLAMADAS SOLICITADAS POR FECHA
+        var Cantidad = @Html.Raw(Json.Encode(ViewBag.LLSPF));
+        var Dias = @Html.Raw(Json.Encode(ViewBag.LLSPF2));
+
+        var ctx = document.getElementById("LlamadasPorFecha").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Dias,
+                datasets: [{
+                    label: 'Cantidad de llamadas',
+                    data: Cantidad,
+                    backgroundColor:'rgba(142, 147, 255, 0.2)',
+                    borderColor: 'rgba(160, 90, 205, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            max: 100,
+                            stepSize: 20,
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+         //LLAMADAS SOLICITADAS POR MES//
+        var Cantidad = @Html.Raw(Json.Encode(ViewBag.LLSPM));
+        var Meses = @Html.Raw(Json.Encode(ViewBag.LLSPM2));
+
+
+            new Chart(document.getElementById("LlamadasSolicitadasPorMes"), {
+            "type": "horizontalBar",
+            "data": {
+                "labels": Meses,
+                "datasets": [{
+                    "label": "Cantidad de llamadas",
+                    "data": Cantidad,
+                    "fill": false,
+                    "backgroundColor": "#3cb371",
+                    "borderColor": "#3cb371",
+                    "hoverBackgroundColor": "#84dd8e",
+                    "borderWidth": 1
+                }]
+            },
+            "options": {
+                "scales": {
+                    "xAxes": [{
+                        "ticks": {
+                            "beginAtZero": true,
+                            "stepSize": 40
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+    }

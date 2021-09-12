@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Prueba";
+}
+
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Reportes llamadas</a>
+            </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse">
+            <div class="panel-body">
+              
+                @Html.Action("Llamadas")
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel-group" id="accordion1">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion1" href="#collapse2">Reportes pendientes</a>
+            </h4>
+        </div>
+        <div id="collapse2" class="panel-collapse">
+            <div class="panel-body">
+               
+                @Html.Action("Pendientes")
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript" src="~/Scripts/wow.js"></script>
+    <script type="text/javascript" src="~/Scripts/wow.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/chart.js"></script>
+    <script>
+               var pps = @Html.Raw(Json.Encode(ViewBag.prueba));
+
+    </script>
+
+    }

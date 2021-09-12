@@ -1,0 +1,94 @@
+﻿@model PGMG.Models.Cliente
+
+@{
+    ViewBag.Title = "Modificar";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <body class="w3">
+        <div class="centrar">
+            <h4>@ViewBag.Title</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ClienteId)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "login" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Localidad, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.EditorFor(model => model.Localidad, new { htmlAttributes = new { @class = "login" } })
+                @Html.ValidationMessageFor(model => model.Localidad, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Provincia, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.DropDownListFor(model => model.ProvinciaId, ViewData["prov"] as SelectList,
+                    "Seleccione la provincia", new { @class = "login" })
+                @Html.ValidationMessageFor(model => model.ProvinciaId, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "login" } })
+                @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Domicilio, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.EditorFor(model => model.Domicilio, new { htmlAttributes = new { @class = "login" } })
+                @Html.ValidationMessageFor(model => model.Domicilio, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Correo, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "login" } })
+                @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.FechaAlta, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.TextBoxFor(model => model.FechaAlta, "{0:dd/MM/yyyy}",
+                new { @class = "login datepicker" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.FechaFundacion, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.TextBoxFor(model => model.FechaFundacion, "{0:dd/MM/yyyy}",
+                new { @class = "login datepicker" })
+            </div>
+
+            <div class="form-group">
+                <a href="@Url.Action("Index")" class="btn btn-default"
+                   data-toggle="tooltip" title="Regresar">
+                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+                </a>
+                <input type="submit" id="submit" value="Modificar" class="btn btn-default" />
+            </div>
+        </div>
+    </body>
+}
+
+@section Scripts {
+    <script src="~/Scripts/ValidarAlCerrar.js"></script>
+    <script>
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: 'es'
+        });
+    </script>
+}
+

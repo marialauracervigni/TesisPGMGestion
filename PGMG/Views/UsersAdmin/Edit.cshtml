@@ -1,0 +1,72 @@
+﻿@model PGMG.Models.EditUserViewModel
+
+@{
+    ViewBag.Title = "Editar usuario";
+}
+<body class="w3">
+    <div class="centrar">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.NombreCompleto, new { @class = "control-label" })
+                <br />
+                @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "login" })
+                @Html.ValidationMessageFor(model => model.NombreCompleto)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserName, new { @class = "control-label" })
+                <br />
+                @Html.TextBoxFor(m => m.UserName, new { @class = "login" })
+                @Html.ValidationMessageFor(model => model.UserName)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, new { @class = "control-label" })
+                <br />
+                @Html.TextBoxFor(m => m.Email, new { @class = "login" })
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">
+                    Seleccione el rol del usuario
+                </label>
+                <br />
+                @foreach (var item in Model.RolesList)
+                {
+                    <input type="checkbox" name="SelectedRole" value="@item.Value" checked="@item.Selected" class="checkbox-inline" />
+                    @Html.Label(item.Value, new { @class = "control-label" })
+                }
+            </div>
+
+            <div class="form-group">
+                <a href="@Url.Action("Index")" class="btn btn-default"
+                   data-toggle="tooltip" title="Regresar">
+                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+                </a>
+                <input type="submit" value="Guardar" class="btn btn-default" />
+            </div>
+        }
+
+    </div>
+</body>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: 'es'
+        });
+    </script>
+}
